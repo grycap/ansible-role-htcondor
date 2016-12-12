@@ -1,0 +1,7 @@
+---
+- lineinfile: dest=/etc/condor/condor_config.local regexp=START line="START = TRUE"
+- lineinfile: dest=/etc/condor/condor_config.local regexp=SUSPEND line="SUSPEND = FALSE"
+- lineinfile: dest=/etc/condor/condor_config.local regexp=PREEMPT line="PREEMPT = FALSE"
+- lineinfile: dest=/etc/condor/condor_config.local regexp=KILL line="KILL = FALSE"
+
+- service: name=condor state=restarted

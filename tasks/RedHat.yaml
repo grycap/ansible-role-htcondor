@@ -1,0 +1,17 @@
+---
+- name: create htcondor.repo
+  get_url: url=https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-development-rhel{{ansible_distribution_major_version}}.repo dest=/etc/yum.repos.d/htcondor.repo mode=0440
+
+- name: Yum install condor in REL system
+  yum: name=condor,condor-python
+  
+- lineinfile: dest=/etc/condor/condor_config regexp=REQUIRE_LOCAL_CONFIG_FILE line="REQUIRE_LOCAL_CONFIG_FILE=TRUE"
+
+- copy:
+    content: |
+       CONDOR_HOST = htcondoreserver
+       BIND_ALL_INTERFACES = FALSE
+       NETWORK_INTERFACE = {{IM_NODE_NET_0_IP}}
+       ALLOW_WRITE = htcondoreserver, vnode*.localdomain
+       DAEMON_LIST = MASTER, STARTD
+    dest: "/etc/condor/condor_config.local"

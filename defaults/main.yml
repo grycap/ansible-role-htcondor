@@ -1,0 +1,11 @@
+---
+# Name of the HTCondor server
+htcondor_server_name: htcondoreserver
+# Type of node to install: front or wn
+htcondor_type_of_node: front
+# Prefix to set to the HTCondor working nodes
+htcondor_vnode_prefix: wn
+# Default ssh user
+htcondor_ssh_user: grycap
+# Maximum number of nodes
+max_number_of_nodes: 3
