@@ -10,7 +10,8 @@ python: "2.7"
 
 env:
   - distro: centos7
-    init: /usr/lib/systemd/systemd
+#    init: /usr/lib/systemd/systemd
+    init: /bin/bash
   - distro: centos6
     init: /sbin/init
   - distro: ubuntu1404
@@ -25,7 +26,7 @@ before_install:
 script:
   - container_id=$(mktemp)
   # Run container in detached state.
-  - 'docker run --detach --privileged --hostname htcondoreserver -v "/sys/fs/cgroup:/sys/fs/cgroup:ro" --volume="${PWD}":/etc/ansible/roles/role_under_test:ro grycap/travis:${distro} "${init}" > "${container_id}"'
+  - 'docker run --detach --privileged --hostname htcondoreserver --volume="${PWD}":/etc/ansible/roles/role_under_test:ro grycap/travis:${distro} "${init}" > "${container_id}"'
 
   # install dependencies
   - 'docker exec "$(cat ${container_id})" ansible-galaxy install grycap.ntp grycap.ssh'
