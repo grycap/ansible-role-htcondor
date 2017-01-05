@@ -9,10 +9,6 @@ language: python
 python: "2.7"
 
 env:
-  - distro: centos7
-#    init: /usr/lib/systemd/systemd
-    init: /bin/bash
-    run_opts: "-t"
   - distro: centos6
     init: /sbin/init
     run_opts: ""
