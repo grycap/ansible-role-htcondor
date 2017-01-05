@@ -4,14 +4,4 @@
 
 - name: Yum install condor in REL system
   yum: name=condor,condor-python
-  
-- lineinfile: dest=/etc/condor/condor_config regexp=REQUIRE_LOCAL_CONFIG_FILE line="REQUIRE_LOCAL_CONFIG_FILE=TRUE"
 
-- copy:
-    content: |
-       CONDOR_HOST = htcondoreserver
-       BIND_ALL_INTERFACES = FALSE
-       NETWORK_INTERFACE = {{IM_NODE_NET_0_IP}}
-       ALLOW_WRITE = htcondoreserver, vnode*.localdomain
-       DAEMON_LIST = MASTER, STARTD
-    dest: "/etc/condor/condor_config.local"

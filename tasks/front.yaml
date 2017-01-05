@@ -1,4 +1,7 @@
 ---
+- name: Include "{{ansible_os_family}}" tasks
+  include: "{{ansible_os_family}}.yaml"
+
 - name: Copy 'is_cluster_ready' file
   copy: dest=/bin/is_cluster_ready src=is_cluster_ready mode=0755 force=no
 
@@ -19,8 +22,17 @@
        {{vnode_prefix}}{{number}}.localdomain
        {% endfor %}
     dest: "/etc/clues2/condor_vnodes.info"
+  
+- lineinfile: dest=/etc/condor/condor_config regexp=REQUIRE_LOCAL_CONFIG_FILE line="REQUIRE_LOCAL_CONFIG_FILE=TRUE"
 
-- include: htcondorcommon.yml
+- copy:
+    content: |
+       CONDOR_HOST = htcondoreserver
+       BIND_ALL_INTERFACES = FALSE
+       NETWORK_INTERFACE = {{IM_NODE_NET_0_IP}}
+       ALLOW_WRITE = htcondoreserver, vnode*.localdomain
+       DAEMON_LIST = MASTER, STARTD
+    dest: "/etc/condor/condor_config.local"
 
 - lineinfile: dest=/etc/condor/condor_config.local regexp=DAEMON_LIST line="DAEMON_LIST = MASTER, COLLECTOR, NEGOTIATOR, SCHEDD"
 - lineinfile: dest=/etc/condor/condor_config.local regexp=NETWORK_INTERFACE line="NETWORK_INTERFACE = {{IM_NODE_NET_1_IP}}"
