@@ -38,7 +38,7 @@ script:
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
 
   # Test role installation.
-  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -e "IM_NODE_NET_0_IP={{ ansible_eth0.ipv4.address }} IM_NODE_NET_1_IP={{ ansible_eth0.ipv4.address }} vnode_prefix=wn"'
+  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -e "IM_NODE_NET_0_IP={{ ansible_default_ipv4.address }} IM_NODE_NET_1_IP={{ ansible_default_ipv4.address }} vnode_prefix=wn"'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
