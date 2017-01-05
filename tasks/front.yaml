@@ -15,7 +15,7 @@
 - file: path=/etc/clues2 state=directory mode=0755
 - copy:
     content: |
-       {% for number in range(1, {{max_number_of_nodes}}|int + 1) %}
+       {% for number in range(1, max_number_of_nodes|int + 1) %}
        {{vnode_prefix}}{{number}}.localdomain
        {% endfor %}
     dest: "/etc/clues2/condor_vnodes.info"
