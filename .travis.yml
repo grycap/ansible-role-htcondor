@@ -12,12 +12,16 @@ env:
   - distro: centos7
 #    init: /usr/lib/systemd/systemd
     init: /bin/bash
+    run_opts: "-t"
   - distro: centos6
     init: /sbin/init
+    run_opts: ""
   - distro: ubuntu1404
     init: /sbin/init
+    run_opts: ""
   - distro: ubuntu1604
     init: /lib/systemd/systemd
+    run_opts: ""
 
 before_install:
   # Pull container.
@@ -26,7 +30,7 @@ before_install:
 script:
   - container_id=$(mktemp)
   # Run container in detached state.
-  - 'docker run --detach --privileged --hostname htcondoreserver --volume="${PWD}":/etc/ansible/roles/role_under_test:ro grycap/travis:${distro} "${init}" > "${container_id}"'
+  - 'docker run --detach --privileged --hostname htcondoreserver --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} grycap/travis:${distro} "${init}" > "${container_id}"'
 
   # install dependencies
   - 'docker exec "$(cat ${container_id})" ansible-galaxy install grycap.ntp grycap.ssh'
@@ -36,6 +40,7 @@ script:
 
   # Test role installation.
   - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -e "IM_NODE_NET_0_IP=172.17.0.2 IM_NODE_NET_1_IP=172.17.0.2 vnode_prefix=wn"'
+  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -e "htcondor_type_of_node=wn"'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
