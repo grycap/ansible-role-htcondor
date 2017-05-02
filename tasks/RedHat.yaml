@@ -3,7 +3,7 @@
   get_url: url=https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-development-rhel{{ansible_distribution_major_version}}.repo dest=/etc/yum.repos.d/htcondor.repo mode=0440
   
 - name: disable gpgcheck
-  lineinfile: path=/etc/yum.repos.d/htcondor.repo regexp='^gpgcheck=' line='gpgcheck=0'
+  lineinfile: dest=/etc/yum.repos.d/htcondor.repo regexp='^gpgcheck=' line='gpgcheck=0'
 
 - name: Yum install condor in REL system
   yum: name=condor,condor-python
