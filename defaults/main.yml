@@ -1,6 +1,4 @@
 ---
-# Name of the HTCondor server
-htcondor_server_name: htcondoreserver
 # Type of node to install: front or wn
 htcondor_type_of_node: front
 # Prefix to set to the HTCondor working nodes
