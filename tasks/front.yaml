@@ -13,7 +13,7 @@
        CONDOR_HOST = htcondoreserver
        BIND_ALL_INTERFACES = FALSE
        NETWORK_INTERFACE = {{IM_NODE_PRIVATE_IP}}
-       ALLOW_WRITE = htcondoreserver, {{vnode_prefix}}*.localdomain
+       ALLOW_WRITE = htcondoreserver, {{htcondor_vnode_prefix}}*.localdomain
        DAEMON_LIST = MASTER, COLLECTOR, NEGOTIATOR, SCHEDD
        NEGOTIATOR_INTERVAL = 30
        NEGOTIATE_ALL_JOBS_IN_CLUSTER = True
