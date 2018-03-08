@@ -1,8 +1,2 @@
 - name: restart htcondor
   service: name=condor state=restarted
-
-- name: start htcondor
-  service: name=condor state=started
-  
-- name: stop htcondor
-  service: name=condor state=stopped
