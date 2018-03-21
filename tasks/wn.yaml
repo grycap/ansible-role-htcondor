@@ -1,11 +1,15 @@
 ---
-- lineinfile: dest=/etc/condor/condor_config.local regexp=START line="START = TRUE"
-  notify: restart htcondor
-- lineinfile: dest=/etc/condor/condor_config.local regexp=SUSPEND line="SUSPEND = FALSE"
-  notify: restart htcondor
-- lineinfile: dest=/etc/condor/condor_config.local regexp=PREEMPT line="PREEMPT = FALSE"
-  notify: restart htcondor
-- lineinfile: dest=/etc/condor/condor_config.local regexp=KILL line="KILL = FALSE"
+- copy:
+    content: |
+           CONDOR_HOST = htcondoreserver.localdomain
+           DAEMON_LIST = MASTER,STARTD
+           ## Always run jobs
+           START = True
+           SUSPEND = False
+           CONTINUE = True
+           PREEMPT = False
+           KILL = False
+    dest: "/etc/condor/condor_config.local"
   notify: restart htcondor
 
 - service: name=condor state=started
