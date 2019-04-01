@@ -12,11 +12,11 @@ env:
   - distro: centos7
     init: /usr/lib/systemd/systemd
     run_opts: ""
-  - distro: ubuntu1404
-    init: /sbin/init
-    run_opts: ""
   - distro: ubuntu1604
     init: /lib/systemd/systemd
+    run_opts: ""
+  - distro: ubuntu1804
+    init: /bin/bash
     run_opts: ""
 
 before_install:
