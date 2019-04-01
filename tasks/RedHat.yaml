@@ -7,6 +7,9 @@
     key: https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
     state: present
 
+- name: Yum install EPEL
+  yum: name=epel-release
+
 - name: Yum install condor in REL system
-  yum: name=condor,condor-python
+  yum: name=condor,condor-python,globus-gss-assist
 

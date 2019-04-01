@@ -16,5 +16,5 @@
   apt_repository: repo='deb http://research.cs.wisc.edu/htcondor/ubuntu/8.8/{{ ansible_distribution_release }} {{ ansible_distribution_release }} contrib' state=present update_cache=yes
 
 - name: Apt install htcondor
-  apt: name=htcondor update_cache=yes
+  apt: name=htcondor,libglobus-gss-assist3 update_cache=yes
 
