@@ -2,5 +2,5 @@
   - name: Include "{{ansible_os_family}}" HTCondor recipe
     include: "{{ansible_os_family}}.yaml"
 
-  - name: Include "{{sge_type_of_node}}" HTCondor recipe
+  - name: Include "{{htcondor_type_of_node}}" HTCondor recipe
     include: "{{htcondor_type_of_node}}.yaml"

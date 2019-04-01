@@ -21,7 +21,7 @@
   notify: restart htcondor
 
 - file:
-    path: {{ item }}
+    path: "{{ item }}"
     state: directory
     owner: condor
     group: condor
@@ -32,7 +32,7 @@
 # disable IPv6
 - lineinfile:
     path: /etc/sysctl.conf
-    line: {{ item }}
+    line: "{{ item }}"
   with_items:
      - 'net.ipv6.conf.all.disable_ipv6 = 1'
      - 'net.ipv6.conf.default.disable_ipv6 = 1'
