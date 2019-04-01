@@ -18,8 +18,8 @@ htcondor_type_of_node: front
 htcondor_vnode_prefix: wn
 # Default ssh user
 htcondor_ssh_user: grycap
-# Number of Maximum nodes
-max_number_of_nodes: 3
+# NETWORK_INTERFACE value in condor_config file
+network_interface: {{ ansible_default_ipv4.address }}
 ```
 
 Example Playbook
