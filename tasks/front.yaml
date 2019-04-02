@@ -39,5 +39,6 @@
      - 'net.ipv6.conf.lo.disable_ipv6 = 1'
 
 - command: sysctl -p
+  ignore_errors: yes
 
 - service: name=condor state=started
