@@ -1,10 +1,16 @@
 ---
-- name: create htcondor.repo
-  get_url: url=https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel{{ansible_distribution_major_version}}.repo dest=/etc/yum.repos.d/htcondor.repo mode=0440
-  
+
+- yum_repository:
+    name: "htcondor"
+    description: "HTCondor RPM Repository"
+    file: "htcondor"
+    baseurl: "{{ htcondor_rpm_repo_base_url }}"
+    enabled: yes
+    gpgcheck: yes
+
 - name: import gpg key
   rpm_key:
-    key: https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
+    key: "{{ htcondor_rpm_repo_gpg_key_url }}"
     state: present
 
 - name: Yum install EPEL
