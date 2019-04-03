@@ -9,6 +9,8 @@ language: python
 python: "2.7"
 
 env:
+  - distro: centos6
+    init: /sbin/init
   - distro: centos7
     init: /usr/lib/systemd/systemd
   - distro: ubuntu1604
