@@ -20,6 +20,7 @@
   rpm_key:
     key: "{{ htcondor_rpm_repo_gpg_key_url }}"
     state: present
+  when: htcondor_rpm_repo_gpg_key_url != ""
 
 - name: Yum install EPEL
   yum: name=epel-release
