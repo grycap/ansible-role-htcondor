@@ -31,11 +31,15 @@
 
 - block:
   - name: enable PowerTools repo
-    ini_file:
-      dest: /etc/yum.repos.d/CentOS-Linux-PowerTools.repo
-      section: powertools
-      option: enabled
-      value: "1"
+    yum_repository:
+      name: powertools
+      description: CentOS Linux $releasever - PowerTools
+      file: CentOS-Linux-PowerTools
+      baseurl: http://mirror.centos.org/$contentdir/$releasever/PowerTools/$basearch/os/
+      mirrorlist: http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=PowerTools&infra=$infra
+      enabled: yes
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+      gpgcheck: yes
 
   - name: Yum install boost-python3 in REL 8+ system
     yum: name=boost-python3 update_cache=yes
