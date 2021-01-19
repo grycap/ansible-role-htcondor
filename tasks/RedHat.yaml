@@ -30,5 +30,5 @@
   when: ansible_distribution_major_version|int < 8
 
 - name: Yum install condor in REL system
-  yum: name=condor,python3-condor,globus-gss-assist
+  yum: name=condor,python3-condor,globus-gss-assist enablerepo=powertools
   when: ansible_distribution_major_version|int >= 8
