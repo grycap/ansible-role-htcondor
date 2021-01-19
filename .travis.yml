@@ -10,7 +10,7 @@ python: "2.7"
 
 env:
   - distro: centos8
-    init: /sbin/init
+    init: /usr/lib/systemd/systemd
   - distro: centos7
     init: /usr/lib/systemd/systemd
   - distro: ubuntu1604
