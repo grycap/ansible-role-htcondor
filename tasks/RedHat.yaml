@@ -29,11 +29,6 @@
   yum: name=condor,condor-python,globus-gss-assist
   when: ansible_distribution_major_version|int < 8
 
-- block:
-  - name: Yum install boost-python3 in REL 8+ system
-    yum: name=boost-python3 update_cache=yes enablerepo=powertools
-
-  - name: Yum install condor in REL 8+ system
-    yum: name=condor,python3-condor,globus-gss-assist enablerepo=powertools
-  
+- name: Yum install condor in REL 8+ system
+  yum: name=condor,python3-condor,globus-gss-assist enablerepo=powertools
   when: ansible_distribution_major_version|int >= 8
