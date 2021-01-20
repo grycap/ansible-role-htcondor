@@ -1,7 +1,7 @@
 ---
 - copy:
     content: |
-           CONDOR_HOST = htcondoreserver.localdomain
+           CONDOR_HOST = {{ htcondor_server }}
            DAEMON_LIST = MASTER,STARTD
            ## Always run jobs
            START = True

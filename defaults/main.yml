@@ -3,6 +3,8 @@
 htcondor_type_of_node: front
 # Prefix to set to the HTCondor working nodes
 htcondor_vnode_prefix: wn
+# Server name
+htcondor_server: htcondoreserver
 # Default ssh user
 htcondor_ssh_user: grycap
 # NETWORK_INTERFACE value in condor_config file
