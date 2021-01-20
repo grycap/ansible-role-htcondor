@@ -16,6 +16,8 @@ The variables that can be passed to this role and a brief description about them
 htcondor_type_of_node: front
 # Prefix to set to the HTcondor working nodes
 htcondor_vnode_prefix: wn
+# Server name
+htcondor_server: htcondoreserver
 # Default ssh user
 htcondor_ssh_user: grycap
 # NETWORK_INTERFACE value in condor_config file
@@ -25,11 +27,18 @@ network_interface: {{ ansible_default_ipv4.address }}
 Example Playbook
 ----------------
 
-This an example of how to install an HTCondor cluster with three nodes:
+This an example of how to install an HTCondor front node:
 ```
 - hosts: server
   roles:
-  - { role: 'grycap.htcondor', htcondor_type_of_node: 'front' }
+  - { role: 'grycap.htcondor', htcondor_type_of_node: 'front', htcondor_server: 'htcondoreserver' }
+```
+
+This an example of how to install an HTCondor working node:
+```
+- hosts: server
+  roles:
+  - { role: 'grycap.htcondor', htcondor_type_of_node: 'wn', htcondor_server: 'htcondoreserver' }
 ```
 Contributing to the role
 ========================

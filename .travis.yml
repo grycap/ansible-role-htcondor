@@ -9,8 +9,8 @@ language: python
 python: "2.7"
 
 env:
-  - distro: centos6
-    init: /sbin/init
+#  - distro: centos8
+#    init: /usr/lib/systemd/systemd
   - distro: centos7
     init: /usr/lib/systemd/systemd
   - distro: ubuntu1604
@@ -25,10 +25,10 @@ before_install:
 script:
   - container_id=$(mktemp)
   # Run container in detached state.
-  - 'docker run -t --detach --privileged --hostname htcondoreserver --volume="${PWD}":/etc/ansible/roles/role_under_test:ro grycap/travis:${distro} "${init}" > "${container_id}"'
+  - 'docker run -t --detach --privileged --hostname htcondoreserver --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/role_under_test:ro grycap/travis:${distro} "${init}" > "${container_id}"'
 
   # install dependencies
-  - 'docker exec "$(cat ${container_id})" ansible-galaxy install --ignore-certs grycap.ntp grycap.ssh'
+  - 'docker exec "$(cat ${container_id})" ansible-galaxy install --ignore-certs geerlingguy.ntp grycap.ssh'
 
   # Ansible syntax check.
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'

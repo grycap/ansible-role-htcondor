@@ -10,10 +10,10 @@
 
 - copy:
     content: |
-       CONDOR_HOST = htcondoreserver
+       CONDOR_HOST = {{ htcondor_server }}
        BIND_ALL_INTERFACES = FALSE
        NETWORK_INTERFACE = {{ network_interface }}
-       ALLOW_WRITE = htcondoreserver, {{htcondor_vnode_prefix}}*.localdomain
+       ALLOW_WRITE = {{ htcondor_server }}, {{htcondor_vnode_prefix}}*.localdomain
        DAEMON_LIST = MASTER, COLLECTOR, NEGOTIATOR, SCHEDD
        NEGOTIATOR_INTERVAL = 30
        NEGOTIATE_ALL_JOBS_IN_CLUSTER = True

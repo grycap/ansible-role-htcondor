@@ -25,6 +25,10 @@
 - name: Yum install EPEL
   yum: name=epel-release
 
-- name: Yum install condor in REL system
+- name: Yum install condor in REL 7- system
   yum: name=condor,condor-python,globus-gss-assist
+  when: ansible_distribution_major_version|int < 8
 
+- name: Yum install condor in REL 8+ system
+  yum: name=condor,python3-condor,globus-gss-assist enablerepo=powertools
+  when: ansible_distribution_major_version|int >= 8

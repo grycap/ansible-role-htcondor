@@ -2,5 +2,21 @@
   - name: Include "{{ansible_os_family}}" HTCondor recipe
     include: "{{ansible_os_family}}.yaml"
 
+  - iptables:
+      action: insert
+      chain: INPUT
+      protocol: tcp
+      destination_port: "9618"
+      jump: ACCEPT
+    ignore_errors: yes
+
+  - firewalld:
+      port: 9618/tcp
+      permanent: true
+      state: enabled
+      immediate: true
+    when: ansible_os_family == "RedHat"
+    ignore_errors: yes
+
   - name: Include "{{htcondor_type_of_node}}" HTCondor recipe
     include: "{{htcondor_type_of_node}}.yaml"
