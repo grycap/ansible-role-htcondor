@@ -29,14 +29,14 @@ This an example of how to install an HTCondor front node:
 ```
 - hosts: server
   roles:
-  - { role: 'grycap.htcondor', htcondor_type_of_node: 'front', htcondor_server: 'htcondoreserver' }
+  - { role: 'grycap.htcondor', htcondor_type_of_node: 'front', htcondor_server: 'htcondoreserver', htcondor_role_manager: true, htcondor_role_submit: true }
 ```
 
 This an example of how to install an HTCondor working node:
 ```
 - hosts: server
   roles:
-  - { role: 'grycap.htcondor', htcondor_type_of_node: 'wn', htcondor_server: 'htcondoreserver' }
+  - { role: 'grycap.htcondor', htcondor_type_of_node: 'wn', htcondor_server: 'htcondoreserver', htcondor_role_execute: true }
 ```
 Contributing to the role
 ========================
