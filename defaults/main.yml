@@ -15,6 +15,7 @@ htcondor_version: 10.x
 htcondor_channel: current
 
 # Domain config
+# https://htcondor.readthedocs.io/en/latest/users-manual/submitting-a-job.html#submitting-jobs-using-a-shared-file-system
 htcondor_domain: ""
 
 # HTCondor roles:
@@ -23,7 +24,7 @@ htcondor_role_submit: false
 htcondor_role_execute: false
 
 # Condor password (to be added to Vault?)
-# also can be used from CLI
+# it can also be set from CLI:
 # ansible-playbook playbook-htcondor.yml --user cloudadm --extra-vars htcondor_password=changeme
 htcondor_password: changeme
 
@@ -38,6 +39,3 @@ htcondor_server: "{{ ansible_fqdn }}"
 
 # Default ssh user
 htcondor_ssh_user: grycap
-
-# NETWORK_INTERFACE value in condor_config file
-network_interface: "{{ ansible_default_ipv4.address }}"

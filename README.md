@@ -20,8 +20,6 @@ htcondor_vnode_prefix: wn
 htcondor_server: htcondoreserver
 # Default ssh user
 htcondor_ssh_user: grycap
-# NETWORK_INTERFACE value in condor_config file
-network_interface: {{ ansible_default_ipv4.address }}
 ```
 
 Example Playbook
