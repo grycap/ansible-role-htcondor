@@ -1,15 +1,43 @@
 ---
+# HTCondor version: https://research.cs.wisc.edu/htcondor/repo/keys/
+# Example values:
+#   9.0
+#   9.1
+#   9.x
+#   10.0
+#   10.x
+htcondor_version: 10.x
+
+# Check https://research.cs.wisc.edu/htcondor/get/
+# Example values:
+#   current
+#   stable
+htcondor_channel: current
+
+# Domain config
+htcondor_domain: ""
+
+# HTCondor roles:
+htcondor_role_manager: false
+htcondor_role_submit: false
+htcondor_role_execute: false
+
+# Condor password (to be added to Vault?)
+# also can be used from CLI
+# ansible-playbook playbook-htcondor.yml --user cloudadm --extra-vars htcondor_password=changeme
+htcondor_password: changeme
+
 # Type of node to install: front or wn
 htcondor_type_of_node: front
+
 # Prefix to set to the HTCondor working nodes
 htcondor_vnode_prefix: wn
+
 # Server name
-htcondor_server: htcondoreserver
+htcondor_server: "{{ ansible_fqdn }}"
+
 # Default ssh user
 htcondor_ssh_user: grycap
+
 # NETWORK_INTERFACE value in condor_config file
 network_interface: "{{ ansible_default_ipv4.address }}"
-# Base URL of the HTCondor RPM repo
-htcondor_rpm_repo_base_url: "https://research.cs.wisc.edu/htcondor/yum/stable/8.8/rhel{{ansible_distribution_major_version}}"
-# URL of the GPG key of the repo
-htcondor_rpm_repo_gpg_key_url: "https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor"

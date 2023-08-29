@@ -1,34 +1,165 @@
 ---
-- set_fact:
-    gpgcheck: yes
-  when: htcondor_rpm_repo_gpg_key_url != ""
+# These steps are based on:
+# https://research.cs.wisc.edu/htcondor/get/
 
-- set_fact:
-    gpgcheck: no
-  when: htcondor_rpm_repo_gpg_key_url == ""
-
-- yum_repository:
-    name: "htcondor"
-    description: "HTCondor RPM Repository"
-    file: "htcondor"
-    baseurl: "{{ htcondor_rpm_repo_base_url }}"
-    enabled: yes
-    priority: 1
-    gpgcheck: "{{ gpgcheck }}"
-
-- name: import gpg key
-  rpm_key:
-    key: "{{ htcondor_rpm_repo_gpg_key_url }}"
+- name: Install pre-requisites
+  ansible.builtin.package:
+    name:
+      - procps-ng
     state: present
-  when: htcondor_rpm_repo_gpg_key_url != ""
 
-- name: Yum install EPEL
-  yum: name=epel-release
+- name: Add EPEL GPG key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
 
-- name: Yum install condor in REL 7- system
-  yum: name=condor,condor-python,globus-gss-assist
-  when: ansible_distribution_major_version|int < 8
+- name: Add YUM repository for EPEL
+  ansible.builtin.yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
+    state: present
 
-- name: Yum install condor in REL 8+ system
-  yum: name=condor,python3-condor,globus-gss-assist enablerepo=powertools
+- name: Install pre-requisites in RHEL8+
+  ansible.builtin.package:
+    name:
+      - dnf-plugins-core
+    state: present
   when: ansible_distribution_major_version|int >= 8
+
+- name: Enable extra repositories in RHEL8
+  ansible.builtin.command: dnf config-manager --set-enabled powertools
+  changed_when: false
+  when: ansible_distribution_major_version|int == 8
+
+- name: Enable extra repositories in RHEL9
+  ansible.builtin.command: dnf config-manager --set-enabled crb
+  changed_when: false
+  when: ansible_distribution_major_version|int == 9
+
+- name: Add HTCondor GPG key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://research.cs.wisc.edu/htcondor/repo/keys/HTCondor-{{ htcondor_version }}-Key
+
+- name: Add YUM repository for HTCondor
+  ansible.builtin.yum:
+    name: https://research.cs.wisc.edu/htcondor/repo/{{ htcondor_channel }}/htcondor-release-current.el{{ ansible_distribution_major_version }}.noarch.rpm
+    state: present
+
+- name: Install condor via package manager
+  ansible.builtin.yum:
+    name:
+      - condor
+    state: present
+    update_cache: true
+
+- name: Configure HTCondor manager role
+  ansible.builtin.template:
+    src: 01-central-manager.config.j2
+    dest: /etc/condor/config.d/01-central-manager.config
+    owner: root
+    group: root
+    mode: '0644'
+  when: htcondor_role_manager
+  notify: restart htcondor
+
+- name: configure htcondor submit role
+  ansible.builtin.template:
+    src: 01-submit.config.j2
+    dest: /etc/condor/config.d/01-submit.config
+    owner: root
+    group: root
+    mode: '0644'
+  when: htcondor_role_submit
+  notify: restart htcondor
+
+- name: Configure HTCondor execute role
+  ansible.builtin.template:
+    src: 01-execute.config.j2
+    dest: /etc/condor/config.d/01-execute.config
+    owner: root
+    group: root
+    mode: '0644'
+  when: htcondor_role_execute
+  notify: restart htcondor
+
+- name: configure htcondor shared filesystem domain
+  ansible.builtin.template:
+    src: 02-domain.config.j2
+    dest: /etc/condor/config.d/02-domain.config
+    owner: root
+    group: root
+    mode: '0644'
+  when: ((htcondor_role_submit or htcondor_role_execute) and htcondor_domain != "")
+  notify: restart htcondor
+
+- name: Remove the default security configuration for HTCondor 9.0
+  ansible.builtin.file:
+    path: /etc/condor/config.d/00-htcondor-9.0.config
+    state: absent
+  when: htcondor_version == "10.x"
+  notify: restart htcondor
+
+- name: Copy auxiliary scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - condor_store_cred.sh
+    - condor_token_create.sh
+
+- name: Get password directory
+  ansible.builtin.command: condor_config_val SEC_PASSWORD_DIRECTORY
+  changed_when: false
+  register: directory
+
+- name: Ensure that the password directory exists
+  ansible.builtin.file:
+    path: "{{ directory.stdout }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Store Condor credentials
+  ansible.builtin.shell: condor_store_cred.sh "{{ htcondor_password }}"
+  changed_when: false
+
+- name: Get tokens directory
+  ansible.builtin.command: condor_config_val SEC_TOKEN_SYSTEM_DIRECTORY
+  changed_when: false
+  register: directory
+
+- name: Ensure that the tokens directory exists
+  ansible.builtin.file:
+    path: "{{ directory.stdout }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Issue Condor token
+  ansible.builtin.shell: condor_token_create.sh "{{ htcondor_server }}"
+  changed_when: false
+
+- name: Is firewalld installed?
+  ansible.builtin.package:
+    name:
+      - firewalld
+    state: present
+
+- name: Open port 9618 for use by HTCondor
+  ansible.posix.firewalld:
+    port: 9618/tcp
+    permanent: true
+    state: enabled
+    zone: public
+  notify: reload service firewalld
+
+- name: Start and enable htcondor service
+  ansible.builtin.service:
+    name: condor
+    state: started
+    enabled: yes
