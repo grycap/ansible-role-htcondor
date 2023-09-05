@@ -28,7 +28,4 @@
 
 - name: Install condor via package manager
   ansible.builtin.apt:
-    name:
-      - htcondor
-    state: present
-    update_cache: yes
+    name: htcondor
