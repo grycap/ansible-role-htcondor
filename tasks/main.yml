@@ -70,6 +70,7 @@
   args:
     creates: "/etc/condor/passwords.d/POOL"
     stdin: "{{ htcondor_password }}"
+    stdin_add_newline: false
 
 - name: Get tokens directory
   ansible.builtin.command: condor_config_val SEC_TOKEN_SYSTEM_DIRECTORY
