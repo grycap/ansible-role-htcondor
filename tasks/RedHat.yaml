@@ -25,16 +25,6 @@
     state: present
   when: ansible_distribution_major_version|int >= 8
 
-- name: Enable extra repositories in RHEL8
-  ansible.builtin.command: dnf config-manager --set-enabled powertools
-  changed_when: false
-  when: ansible_distribution_major_version|int == 8
-
-- name: Enable extra repositories in RHEL9
-  ansible.builtin.command: dnf config-manager --set-enabled crb
-  changed_when: false
-  when: ansible_distribution_major_version|int == 9
-
 - name: Add HTCondor GPG key
   ansible.builtin.rpm_key:
     state: present
@@ -45,9 +35,20 @@
     name: https://research.cs.wisc.edu/htcondor/repo/{{ htcondor_channel }}/htcondor-release-current.el{{ ansible_distribution_major_version }}.noarch.rpm
     state: present
 
+- name: Enable extra repositories in RHEL8
+  set_fact:
+    repo_to_enable: "powertools"
+  when: ansible_distribution_major_version|int == 8
+
+- name: Enable extra repositories in RHEL9
+  set_fact:
+    repo_to_enable: "crb"
+  when: ansible_distribution_major_version|int == 9
+
 - name: Install condor via package manager
   ansible.builtin.yum:
     name:
       - condor
     state: present
     update_cache: true
+    enablerepo: "{{ repo_to_enable }}"

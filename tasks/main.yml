@@ -52,17 +52,6 @@
   when: htcondor_version == "10.x"
   notify: restart htcondor
 
-- name: Copy auxiliary scripts
-  ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: "/bin/{{ item }}"
-    owner: root
-    group: root
-    mode: '0755'
-  with_items:
-    - condor_store_cred.sh
-    - condor_token_create.sh
-
 - name: Get password directory
   ansible.builtin.command: condor_config_val SEC_PASSWORD_DIRECTORY
   changed_when: false
@@ -77,8 +66,10 @@
     mode: '0700'
 
 - name: Store Condor credentials
-  ansible.builtin.shell: condor_store_cred.sh "{{ htcondor_password }}"
-  changed_when: false
+  ansible.builtin.command: condor_store_cred add -c -i -
+  args:
+    creates: "/etc/condor/passwords.d/POOL"
+    stdin: "{{ htcondor_password }}"
 
 - name: Get tokens directory
   ansible.builtin.command: condor_config_val SEC_TOKEN_SYSTEM_DIRECTORY
@@ -94,8 +85,9 @@
     mode: '0700'
 
 - name: Issue Condor token
-  ansible.builtin.shell: condor_token_create.sh "{{ htcondor_server }}"
-  changed_when: false
+  ansible.builtin.shell: condor_token_create -identity condor@{{ htcondor_server }} > {{ directory.stdout }}/condor@{{ htcondor_server }}
+  args:
+    creates: "{{ directory.stdout }}/condor@{{ htcondor_server }}"
 
 - name: Is firewalld installed?
   ansible.builtin.package:
