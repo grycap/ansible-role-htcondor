@@ -12,14 +12,44 @@ Role Variables
 
 The variables that can be passed to this role and a brief description about them are as follows.
 ```
-# Type of node to install: front or wn
-htcondor_type_of_node: front
-# Prefix to set to the HTcondor working nodes
-htcondor_vnode_prefix: wn
+# HTCondor version: https://research.cs.wisc.edu/htcondor/repo/keys/
+# Example values:
+#   9.0
+#   9.1
+#   9.x
+#   10.0
+#   10.x
+htcondor_version: 10.x
+
+# Check https://research.cs.wisc.edu/htcondor/get/
+# Example values:
+#   current
+#   stable
+htcondor_channel: current
+
+# Domain config
+# https://htcondor.readthedocs.io/en/latest/users-manual/submitting-a-job.html#submitting-jobs-using-a-shared-file-system
+htcondor_domain: ""
+
+# HTCondor roles:
+# Are overwrited it htcondor_type_of_node is set
+htcondor_role_manager: false
+htcondor_role_submit: false
+htcondor_role_execute: false
+
+# Condor password (to be added to Vault?)
+# it can also be set from CLI:
+# ansible-playbook playbook-htcondor.yml --user cloudadm --extra-vars htcondor_password=changeme
+htcondor_password: changeme
+
+# Type of node to install: front, wn or leave it empty to use the htcondor_role_X variables
+htcondor_type_of_node: ''
+
 # Server name
-htcondor_server: htcondoreserver
+htcondor_server: "{{ ansible_fqdn }}"
+
 # Default ssh user
-htcondor_ssh_user: grycap
+htcondor_ssh_user: condor
 ```
 
 Example Playbook

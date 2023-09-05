@@ -19,6 +19,7 @@ htcondor_channel: current
 htcondor_domain: ""
 
 # HTCondor roles:
+# Are overwrited it htcondor_type_of_node is set
 htcondor_role_manager: false
 htcondor_role_submit: false
 htcondor_role_execute: false
@@ -31,11 +32,8 @@ htcondor_password: changeme
 # Type of node to install: front, wn or leave it empty to use the htcondor_role_X variables
 htcondor_type_of_node: ''
 
-# Prefix to set to the HTCondor working nodes
-htcondor_vnode_prefix: wn
-
 # Server name
 htcondor_server: "{{ ansible_fqdn }}"
 
 # Default ssh user
-htcondor_ssh_user: grycap
+htcondor_ssh_user: condor
