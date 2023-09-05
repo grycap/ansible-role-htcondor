@@ -29,11 +29,11 @@ htcondor_role_execute: false
 # ansible-playbook playbook-htcondor.yml --user cloudadm --extra-vars htcondor_password=changeme
 htcondor_password: changeme
 
-# Type of node to install: front, wn or leave it empty to use the htcondor_role_X variables
-htcondor_type_of_node: ''
+# Type of node to install: front, wn
+htcondor_type_of_node: 'front'
 
 # Server name
 htcondor_server: "{{ ansible_fqdn }}"
 
 # Default ssh user
-htcondor_ssh_user: condor
+htcondor_ssh_user: condoruser

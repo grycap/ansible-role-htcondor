@@ -1,8 +1,8 @@
-[![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Build Status](https://travis-ci.org/grycap/ansible-role-htcondor.svg?branch=master)](https://travis-ci.org/grycap/ansible-role-htcondor)
-
 HTCondor cluster Role
 ======================
+
+[![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Build Status](https://travis-ci.org/grycap/ansible-role-htcondor.svg?branch=master)](https://travis-ci.org/grycap/ansible-role-htcondor)
 
 Ansible Role to install an HTCondor [HTCondor] Cluster (https://research.cs.wisc.edu/htcondor/).
 Recipe to be used by [EC3](http://servproject.i3m.upv.es/ec3/).
@@ -11,7 +11,8 @@ Role Variables
 --------------
 
 The variables that can be passed to this role and a brief description about them are as follows.
-```
+
+```yaml
 # HTCondor version: https://research.cs.wisc.edu/htcondor/repo/keys/
 # Example values:
 #   9.0
@@ -42,33 +43,37 @@ htcondor_role_execute: false
 # ansible-playbook playbook-htcondor.yml --user cloudadm --extra-vars htcondor_password=changeme
 htcondor_password: changeme
 
-# Type of node to install: front, wn or leave it empty to use the htcondor_role_X variables
-htcondor_type_of_node: ''
+# Type of node to install: front, wn
+htcondor_type_of_node: 'front'
 
 # Server name
 htcondor_server: "{{ ansible_fqdn }}"
 
 # Default ssh user
-htcondor_ssh_user: condor
+htcondor_ssh_user: condoruser
 ```
 
 Example Playbook
 ----------------
 
 This an example of how to install an HTCondor front node:
-```
+
+```yaml
 - hosts: server
   roles:
-  - { role: 'grycap.htcondor', htcondor_type_of_node: 'front' }
+  - { role: 'grycap.htcondor', htcondor_type_of_node: 'front', htcondor_role_manager: true, htcondor_role_submit: true }
 ```
 
 This an example of how to install an HTCondor working node:
-```
+
+```yaml
 - hosts: server
   roles:
-  - { role: 'grycap.htcondor', htcondor_type_of_node: 'wn' }
+  - { role: 'grycap.htcondor', htcondor_type_of_node: 'wn', htcondor_role_execute: true }
 ```
+
 Contributing to the role
 ========================
+
 In order to keep the code clean, pushing changes to the master branch has been disabled. If you want to contribute, you have to create a branch, upload your changes and then create a pull request.  
 Thanks

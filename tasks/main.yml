@@ -2,20 +2,6 @@
 # These steps are based on:
 # https://research.cs.wisc.edu/htcondor/get/
 
-- name: Set HTCondor roles for front node
-  set_fact:
-    htcondor_role_manager: true
-    htcondor_role_submit: true
-    htcondor_role_execute: false
-  when: htcondor_type_of_node == "front"
-
-- name: Set HTCondor roles for wn node
-  set_fact:
-    htcondor_role_manager: false
-    htcondor_role_submit: false
-    htcondor_role_execute: true
-  when: htcondor_type_of_node == "wn"
-
 - name: Include "{{ansible_os_family}}" HTCondor recipe
   include_tasks: "{{ansible_os_family}}.yaml"
 
