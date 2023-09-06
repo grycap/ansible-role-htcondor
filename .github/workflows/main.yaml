@@ -13,7 +13,7 @@ jobs:
 
   molecule:
     name: Molecule
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: checkout
@@ -34,14 +34,13 @@ jobs:
       - name: Basic role syntax check
         run: sudo ansible-playbook tests/test.yml -i tests/inventory --syntax-check
 
-      - name: Basic role check in front
+      - name: Basic role check
         run: sudo ansible-playbook tests/test.yml -i tests/inventory
 
-      - name: Idempotence role check in front
+      - name: Idempotence role check
         run: sudo ansible-playbook tests/test.yml -i tests/inventory
 
-      - name: Basic role check in wn
-        run: sudo ansible-playbook tests/test.yml -i tests/inventory -e htcondor_type_of_node=wn
+      - name: Test installation of HTCondor
+        run: condor_status
 
-      - name: Idempotence role check in wn 
-        run: sudo ansible-playbook tests/test.yml -i tests/inventory -e htcondor_type_of_node=wn
+

@@ -1,34 +1,54 @@
 ---
-- set_fact:
-    gpgcheck: yes
-  when: htcondor_rpm_repo_gpg_key_url != ""
+# These steps are based on:
+# https://research.cs.wisc.edu/htcondor/get/
 
-- set_fact:
-    gpgcheck: no
-  when: htcondor_rpm_repo_gpg_key_url == ""
-
-- yum_repository:
-    name: "htcondor"
-    description: "HTCondor RPM Repository"
-    file: "htcondor"
-    baseurl: "{{ htcondor_rpm_repo_base_url }}"
-    enabled: yes
-    priority: 1
-    gpgcheck: "{{ gpgcheck }}"
-
-- name: import gpg key
-  rpm_key:
-    key: "{{ htcondor_rpm_repo_gpg_key_url }}"
+- name: Install pre-requisites
+  ansible.builtin.package:
+    name:
+      - procps-ng
     state: present
-  when: htcondor_rpm_repo_gpg_key_url != ""
 
-- name: Yum install EPEL
-  yum: name=epel-release
+- name: Add EPEL GPG key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
 
-- name: Yum install condor in REL 7- system
-  yum: name=condor,condor-python,globus-gss-assist
-  when: ansible_distribution_major_version|int < 8
+- name: Add YUM repository for EPEL
+  ansible.builtin.yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
+    state: present
 
-- name: Yum install condor in REL 8+ system
-  yum: name=condor,python3-condor,globus-gss-assist enablerepo=powertools
+- name: Install pre-requisites in RHEL8+
+  ansible.builtin.package:
+    name:
+      - dnf-plugins-core
+    state: present
   when: ansible_distribution_major_version|int >= 8
+
+- name: Add HTCondor GPG key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://research.cs.wisc.edu/htcondor/repo/keys/HTCondor-{{ htcondor_version }}-Key
+
+- name: Add YUM repository for HTCondor
+  ansible.builtin.yum:
+    name: https://research.cs.wisc.edu/htcondor/repo/{{ htcondor_channel }}/htcondor-release-current.el{{ ansible_distribution_major_version }}.noarch.rpm
+    state: present
+
+- name: Enable extra repositories in RHEL8
+  set_fact:
+    repo_to_enable: "powertools"
+  when: ansible_distribution_major_version|int == 8
+
+- name: Enable extra repositories in RHEL9
+  set_fact:
+    repo_to_enable: "crb"
+  when: ansible_distribution_major_version|int == 9
+
+- name: Install condor via package manager
+  ansible.builtin.yum:
+    name:
+      - condor
+    state: present
+    update_cache: true
+    enablerepo: "{{ repo_to_enable }}"

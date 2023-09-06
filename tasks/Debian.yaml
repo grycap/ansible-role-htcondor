@@ -1,20 +1,31 @@
 ---
+# These steps are based on:
+# https://research.cs.wisc.edu/htcondor/get/
 
-- name: Install requisites
-  apt: name=apt-transport-https,ca-certificates,software-properties-common
+- name: Install pre-requisites
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - gnupg
+    - apt-transport-https
+    - procps
+    - keyboard-configuration
+    - console-setup
+    - tzdata
 
-- name: Add repo key
-  apt_key: url="https://research.cs.wisc.edu/htcondor/ubuntu/HTCondor-Release.gpg.key"
-  ignore_errors: yes
-  register: add_repo_key
+- name: Add HTCondor GPGP key
+  ansible.builtin.apt_key:
+    url: https://research.cs.wisc.edu/htcondor/repo/keys/HTCondor-{{ htcondor_version }}-Key
+    state: present
 
-- name: Add repo key (python 2.7.9 or older)
-  shell: curl -fsSL https://research.cs.wisc.edu/htcondor/ubuntu/HTCondor-Release.gpg.key | apt-key add -qq - >/dev/null
-  when: add_repo_key is failed
+- name: Add APT repository for HTCondor
+  ansible.builtin.apt_repository:
+    repo: 'deb [arch=amd64] https://research.cs.wisc.edu/htcondor/repo/ubuntu/{{ htcondor_channel }} {{ ansible_distribution_release }} main'
+    state: present
+    update_cache: yes
 
-- name: Add repo
-  apt_repository: repo='deb http://research.cs.wisc.edu/htcondor/ubuntu/8.8/{{ ansible_distribution_release }} {{ ansible_distribution_release }} contrib' state=present update_cache=yes
-
-- name: Apt install htcondor
-  apt: name=htcondor,libglobus-gss-assist3 update_cache=yes
-
+- name: Install condor via package manager
+  ansible.builtin.apt:
+    name: htcondor
