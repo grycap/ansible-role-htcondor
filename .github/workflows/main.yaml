@@ -45,3 +45,6 @@ jobs:
 
       - name: Idempotence role check in wn 
         run: sudo ansible-playbook tests/test.yml -i tests/inventory -e htcondor_type_of_node=wn
+
+      - name: Test installation of HTCondor
+        run: condor_status
