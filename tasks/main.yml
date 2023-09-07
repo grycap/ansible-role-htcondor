@@ -104,6 +104,14 @@
     zone: public
   notify: reload service firewalld
 
+- name: Open NFS port
+  ansible.posix.firewalld:
+    service: nfs
+    permanent: true
+    state: enabled
+    zone: public
+  notify: reload service firewalld
+
 - name: Start and enable htcondor service
   ansible.builtin.service:
     name: condor
