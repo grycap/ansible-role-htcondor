@@ -95,6 +95,7 @@
     name:
       - firewalld
     state: present
+  when: htcondor_firewall_condor or htcondor_firewall_nfs
 
 - name: Open port 9618 for use by HTCondor
   ansible.posix.firewalld:
@@ -103,6 +104,7 @@
     state: enabled
     zone: public
   notify: reload service firewalld
+  when: htcondor_firewall_condor
 
 - name: Open NFS port
   ansible.posix.firewalld:
@@ -111,6 +113,7 @@
     state: enabled
     zone: public
   notify: reload service firewalld
+  when: htcondor_firewall_nfs
 
 - name: Start and enable htcondor service
   ansible.builtin.service:

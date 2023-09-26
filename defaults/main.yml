@@ -37,3 +37,8 @@ htcondor_server: "{{ ansible_fqdn }}"
 
 # Default ssh user
 htcondor_ssh_user: condoruser
+
+# Firewall configuration:
+# Open firewall ports for HTCondor and NFS
+htcondor_firewall_condor: true
+htcondor_firewall_nfs: true
