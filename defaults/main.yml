@@ -12,7 +12,7 @@ htcondor_version: 10.x
 # Example values:
 #   current
 #   stable
-htcondor_channel: current
+htcondor_channel: 10.x
 
 # Domain config
 # https://htcondor.readthedocs.io/en/latest/users-manual/submitting-a-job.html#submitting-jobs-using-a-shared-file-system
