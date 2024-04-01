@@ -20,13 +20,9 @@ The variables that can be passed to this role and a brief description about them
 #   9.x
 #   10.0
 #   10.x
+#   23.0
+#   23.x
 htcondor_version: 10.x
-
-# Check https://research.cs.wisc.edu/htcondor/get/
-# Example values:
-#   current
-#   stable
-htcondor_channel: current
 
 # Domain config
 # https://htcondor.readthedocs.io/en/latest/users-manual/submitting-a-job.html#submitting-jobs-using-a-shared-file-system
