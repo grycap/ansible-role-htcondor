@@ -32,7 +32,7 @@
 
 - name: Add YUM repository for HTCondor
   ansible.builtin.yum:
-    name: https://research.cs.wisc.edu/htcondor/repo/{{ htcondor_channel }}/htcondor-release-current.el{{ ansible_distribution_major_version }}.noarch.rpm
+    name: https://research.cs.wisc.edu/htcondor/repo/{{ htcondor_version }}/htcondor-release-current.el{{ ansible_distribution_major_version }}.noarch.rpm
     state: present
 
 - name: Enable extra repositories in RHEL8
