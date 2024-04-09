@@ -49,7 +49,7 @@
   ansible.builtin.file:
     path: /etc/condor/config.d/00-htcondor-9.0.config
     state: absent
-  when: htcondor_version == "10.x"
+  when: htcondor_version is ansible.builtin.match("10") or htcondor_version is ansible.builtin.match("23")
   notify: restart htcondor
 
 - name: Get password directory

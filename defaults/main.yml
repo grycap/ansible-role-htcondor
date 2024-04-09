@@ -1,18 +1,15 @@
 ---
-# HTCondor version: https://research.cs.wisc.edu/htcondor/repo/keys/
+# HTCondor version:
+#   https://research.cs.wisc.edu/htcondor/repo/keys/
 # Example values:
 #   9.0
 #   9.1
 #   9.x
 #   10.0
 #   10.x
-htcondor_version: 10.x
-
-# Check https://research.cs.wisc.edu/htcondor/get/
-# Example values:
-#   current
-#   stable
-htcondor_channel: 10.x
+#   23.0
+#   23.x
+htcondor_version: 23.x
 
 # Domain config
 # https://htcondor.readthedocs.io/en/latest/users-manual/submitting-a-job.html#submitting-jobs-using-a-shared-file-system
