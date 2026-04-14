@@ -40,6 +40,14 @@ platforms:
     command: "/usr/sbin/init"
     tty: true
     dockerfile: ../Dockerfile-rockylinux-systemd.j2
+  - name: el-10
+    image: rockylinux:10
+    pre_build_image: false
+    systemd: true
+    privileged: true
+    command: "/usr/sbin/init"
+    tty: true
+    dockerfile: ../Dockerfile-rockylinux-systemd.j2
 provisioner:
   name: ansible
   config_options:
@@ -53,6 +61,10 @@ provisioner:
       el-7:
         ansible_python_interpreter: /usr/bin/python
       el-8:
+        ansible_python_interpreter: /usr/bin/python3
+      el-9:
+        ansible_python_interpreter: /usr/bin/python3
+      el-10:
         ansible_python_interpreter: /usr/bin/python3
 verifier:
   name: ansible

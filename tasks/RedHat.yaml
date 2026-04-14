@@ -40,10 +40,10 @@
     repo_to_enable: "powertools"
   when: ansible_distribution_major_version|int == 8
 
-- name: Enable extra repositories in RHEL9
+- name: Enable extra repositories in RHEL9+
   ansible.builtin.set_fact:
     repo_to_enable: "crb"
-  when: ansible_distribution_major_version|int == 9
+  when: ansible_distribution_major_version|int >= 9
 
 - name: Install condor via package manager
   ansible.builtin.yum:
