@@ -8,6 +8,13 @@
       - procps-ng
     state: present
 
+- name: Install pre-requisites in RHEL8+
+  ansible.builtin.package:
+    name:
+      - dnf-plugins-core
+    state: present
+  when: ansible_distribution_major_version|int >= 8
+
 - name: Install pre-requisites in RHEL10+
   ansible.builtin.package:
     name:
@@ -24,13 +31,6 @@
   ansible.builtin.yum:
     name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
     state: present
-
-- name: Install pre-requisites in RHEL8+
-  ansible.builtin.package:
-    name:
-      - dnf-plugins-core
-    state: present
-  when: ansible_distribution_major_version|int >= 8
 
 - name: Add HTCondor GPG key
   ansible.builtin.rpm_key:
