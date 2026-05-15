@@ -90,6 +90,20 @@
   args:
     creates: "{{ directory.stdout }}/condor@{{ htcondor_server }}"
 
+- name: Find token files
+  ansible.builtin.find:
+    paths: "{{ directory.stdout }}"
+    file_type: file
+    recurse: yes
+  register: htcondor_token_files
+
+- name: Ensure token permissions (400|600|700)
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "{{ htcondor_token_permissions }}"
+  notify: restart htcondor
+  loop: "{{ htcondor_token_files.files }}"
+
 - name: Is firewalld installed?
   ansible.builtin.package:
     name:
