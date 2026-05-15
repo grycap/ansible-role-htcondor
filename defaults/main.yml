@@ -34,3 +34,6 @@ htcondor_server: "{{ ansible_fqdn }}"
 
 # Default ssh user
 htcondor_ssh_user: condoruser
+
+# Token Permissions
+htcondor_token_permissions: '0600'
